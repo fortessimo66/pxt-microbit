@@ -129,11 +129,25 @@ namespace pxsim.images {
 }
 
 namespace pxsim.ImageMethods {
+    function fixImageBrightness(img: Image) {
+        if (led.displayMode() === DisplayMode.greyscale) {
+            const b = led.brightness();
+            for (let row = 0; row < 5; ++row) {
+                for (let col = 0; col < img.width; ++col) {
+                    if (pixel(img, col, row) > 0) {
+                        setPixelBrightness(img, col, row, b);
+                    }
+                }
+            }
+        }
+    }
+
     export function showImage(leds: Image, offset: number, interval: number) {
-        pxtrt.nullCheck(leds)
+        pxtrt.nullCheck(leds);
         let cb = getResume();
         let first = true;
 
+        fixImageBrightness(leds);
         board().ledMatrixState.animationQ.enqueue({
             interval,
             frame: () => {
@@ -151,6 +165,7 @@ namespace pxsim.ImageMethods {
     export function plotImage(leds: Image, offset: number): void {
         pxtrt.nullCheck(leds)
 
+        fixImageBrightness(leds);
         board().ledMatrixState.animationQ.enqueue({
             interval: 0,
             frame: () => {
@@ -211,6 +226,7 @@ namespace pxsim.ImageMethods {
         let off = stride > 0 ? 0 : leds.width - 1;
         let display = board().ledMatrixState.image;
 
+        fixImageBrightness(leds);
         board().ledMatrixState.animationQ.enqueue({
             interval: interval,
             frame: () => {

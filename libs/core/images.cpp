@@ -56,6 +56,18 @@ namespace ImageMethods {
 //% help=images/plot-image
 //% parts="ledmatrix"
 void plotImage(Image i, int xOffset = 0) {
+    if (uBit.display.getDisplayMode() == DISPLAY_MODE_GREYSCALE) {
+        i->makeWritable();
+        MicroBitImage mbImg(i->img);
+        int b = uBit.display.getBrightness();
+        for (int row = 0; row < i->img->height; ++row) {
+            for (int col = 0; col < i->img->width; ++col) {
+                if (mbImg.getPixelValue(col, row) > 0) {
+                    mbImg.setPixelValue(col, row, b);
+                }
+            }
+        }
+    }
     uBit.display.print(MicroBitImage(i->img), -xOffset, 0, 0, 0);
 }
 
@@ -67,6 +79,18 @@ void plotImage(Image i, int xOffset = 0) {
 //% blockId=device_show_image_offset block="show image %sprite(myImage)|at offset %offset" blockGap=8
 //% parts="ledmatrix" async
 void showImage(Image sprite, int xOffset, int interval = 400) {
+    if (uBit.display.getDisplayMode() == DISPLAY_MODE_GREYSCALE) {
+        sprite->makeWritable();
+        MicroBitImage mbImg(sprite->img);
+        int b = uBit.display.getBrightness();
+        for (int row = 0; row < sprite->img->height; ++row) {
+            for (int col = 0; col < sprite->img->width; ++col) {
+                if (mbImg.getPixelValue(col, row) > 0) {
+                    mbImg.setPixelValue(col, row, b);
+                }
+            }
+        }
+    }
     uBit.display.print(MicroBitImage(sprite->img), -xOffset, 0, 0, interval);
 }
 
@@ -92,6 +116,17 @@ void plotFrame(Image i, int xOffset) {
 //% blockGap=8 parts="ledmatrix"
 void scrollImage(Image id, int frameOffset, int interval) {
     MicroBitImage i(id->img);
+    if (uBit.display.getDisplayMode() == DISPLAY_MODE_GREYSCALE) {
+        id->makeWritable();
+        int b = uBit.display.getBrightness();
+        for (int row = 0; row < id->img->height; ++row) {
+            for (int col = 0; col < id->img->width; ++col) {
+                if (i.getPixelValue(col, row) > 0) {
+                    i.setPixelValue(col, row, b);
+                }
+            }
+        }
+    }
     uBit.display.animate(i, interval, frameOffset, MICROBIT_DISPLAY_ANIMATE_DEFAULT_POS, 0);
 }
 

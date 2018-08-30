@@ -168,6 +168,18 @@ enum ArrowNames {
 }
 
 namespace basic {
+    function fixImageBrightness(img: Image) {
+        if (led.displayMode() !== DisplayMode.BackAndWhite) {
+            const b = led.brightness();
+            for (let i = 0; i <= 4; i++) {
+                for (let j = 0; j <= 4; j++) {
+                    if (img.pixelBrightness(i, j) > 0) {
+                        img.setPixelBrightness(i, j, b);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Draws the selected icon on the LED screen
@@ -184,8 +196,9 @@ namespace basic {
     //% icon.fieldOptions.width="380"
     //% icon.fieldOptions.maxRows=4
     export function showIcon(icon: IconNames, interval = 600) {
-        let res = images.iconImage(icon)
-        res.showImage(0, interval)
+        let res = images.iconImage(icon);
+        // fixImageBrightness(res);
+        res.showImage(0, interval);
     }
 
     /**
@@ -200,8 +213,9 @@ namespace basic {
     //% advanced=true
     //% help=basic/show-arrow
     export function showArrow(direction: number, interval = 600) {
-        let res = images.arrowImage(direction)
-        res.showImage(0, interval)
+        let res = images.arrowImage(direction);
+        // fixImageBrightness(res);
+        res.showImage(0, interval);
     }
 }
 
